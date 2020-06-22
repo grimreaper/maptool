@@ -19,6 +19,7 @@ import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import net.rptools.maptool.util.GraphicsUtil;
@@ -120,15 +121,14 @@ public class VisibleAreaSegment implements Comparable<VisibleAreaSegment> {
 
   ////
   // COMPARABLE
+  @Override
   public int compareTo(VisibleAreaSegment o) {
     if (o != this) {
       // Jamz: We're getting the following exception from this compare:
       // java.lang.IllegalArgumentException: Comparison method violates its general contract!
       // So we changed getDistanceFromOrigin() to return a long after multiplying by 1000 for
       // precision
-      long odist = o.getDistanceFromOrigin();
-      long val = getDistanceFromOrigin() - odist; // separate variable for debugging
-      return (int) val;
+      return Long.compare(getDistanceFromOrigin(), o.getDistanceFromOrigin());
       // return val < EPSILON && val > -EPSILON ? 0 : (int) val; // Should we use an EPSILON value?
       // return getDistanceFromOrigin() < odist ? -1 : getDistanceFromOrigin() > odist ? 1 : 0;
     }

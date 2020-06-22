@@ -4849,7 +4849,7 @@ public class ZoneRenderer extends JComponent
   // COMPARABLE
   public int compareTo(ZoneRenderer o) {
     if (o != this) {
-      return (int) (zone.getCreationTime() - o.zone.getCreationTime());
+      return Long.compare(zone.getCreationTime(), o.zone.getCreationTime());
     }
     return 0;
   }

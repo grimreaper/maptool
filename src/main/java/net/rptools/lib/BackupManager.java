@@ -26,7 +26,7 @@ public class BackupManager {
 
   private static final long DEFAULT_MAX_BACKUP_SIZE = 128 * 1024 * 1024; // megs
 
-  private File backupDir;
+  private final File backupDir;
   private long maxBackupSize;
 
   public BackupManager(File backupDir) throws IOException {
@@ -59,7 +59,7 @@ public class BackupManager {
     // Enough room ?
     List<File> fileList = getFiles();
     long availableSpace = maxBackupSize - getUsedSpace();
-    while (fileList.size() > 0 && file.length() > availableSpace) {
+    while (!fileList.isEmpty() && file.length() > availableSpace) {
       File oldFile = fileList.remove(0);
       availableSpace += oldFile.length();
       oldFile.delete();
@@ -79,14 +79,7 @@ public class BackupManager {
   private List<File> getFiles() {
 
     List<File> fileList = new LinkedList<File>(Arrays.asList(backupDir.listFiles()));
-    Collections.sort(
-        fileList,
-        new Comparator<File>() {
-          public int compare(File o1, File o2) {
-
-            return o1.lastModified() < o2.lastModified() ? -1 : 1;
-          }
-        });
+    fileList.sort(Comparator.comparing(File::lastModified));
 
     return fileList;
   }
